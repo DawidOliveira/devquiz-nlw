@@ -1,0 +1,112 @@
+import 'package:DevQuiz/app/modules/challenge/challenge_controller.dart';
+import 'package:DevQuiz/app/modules/challenge/widgets/next_button_widget.dart';
+import 'package:DevQuiz/app/modules/challenge/widgets/question_indicator_widget.dart';
+import 'package:DevQuiz/app/modules/challenge/widgets/quiz/quiz_widget.dart';
+import 'package:DevQuiz/app/shared/models/question.dart';
+import 'package:flutter/material.dart';
+
+class ChallengePage extends StatefulWidget {
+  final List<QuestionModel> questions;
+
+  const ChallengePage({Key? key, required this.questions}) : super(key: key);
+
+  @override
+  _ChallengePageState createState() => _ChallengePageState();
+}
+
+class _ChallengePageState extends State<ChallengePage> {
+  final controller = ChallengeController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller.pageController.addListener(() {
+      controller.setCurrentPage = controller.pageController.page!.toInt();
+    });
+  }
+
+  Future<void> nextPage() async {
+    if (controller.getCurrentPage + 1 != widget.questions.length)
+      await controller.nextPage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(104),
+        child: Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: SafeArea(
+            top: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ValueListenableBuilder<int>(
+                  valueListenable: controller.currentPage,
+                  builder: (_, value, __) {
+                    return QuestionIndicatorWidget(
+                      currentPage: value,
+                      length: widget.questions.length,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: PageView(
+        controller: controller.pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: widget.questions
+            .map((e) => QuizWidget(
+                  question: e,
+                  onChanged: nextPage,
+                ))
+            .toList(),
+      ),
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          child: ValueListenableBuilder<int>(
+            valueListenable: controller.currentPage,
+            builder: (_, value, __) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                if (value + 1 < widget.questions.length)
+                  Expanded(
+                    child: NextButtonWidget.white(
+                      label: "Pular",
+                      onTap: nextPage,
+                    ),
+                  ),
+                if (value + 1 == widget.questions.length)
+                  SizedBox(
+                    width: 7,
+                  ),
+                if (value + 1 == widget.questions.length)
+                  Expanded(
+                    child: NextButtonWidget.green(
+                      label: "Confirmar",
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
