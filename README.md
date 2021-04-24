@@ -24,7 +24,7 @@ Aplicativo mobile com um Quiz para ser respondido.
 
 Necessário:
 
-- [Flutter](flutter.dev) 2.0.5 ou superior
+- [Flutter](https://flutter.dev) 2.0.5 ou superior
 - Visual Studio Code ou Android Studio
 - Git
 - ❌ Não é necessário instalar Android SDK nem AVD. A partir do Flutter 2.0.5 existe a versão "Chrome" ou "Edge"
