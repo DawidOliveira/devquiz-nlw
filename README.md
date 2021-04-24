@@ -8,6 +8,10 @@
 <p align="center">#NLW5 - Rocketseat - Trilha Flutter - DevQuiz
  🚀</p>
 
+## ✅ Descrição do projeto
+
+Aplicativo mobile com um Quiz para ser respondido.
+
 ## ✅ Plugins do Vscode
 
 - Dart
